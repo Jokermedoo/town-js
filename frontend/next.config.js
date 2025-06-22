@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require('./next-i18next.config');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   poweredByHeader: false,
   compress: true,
+  i18n,
   
   // Image optimization
   images: {
@@ -15,13 +18,6 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
-  },
-
-  // i18n configuration
-  i18n: {
-    locales: ['ar', 'en'],
-    defaultLocale: 'ar',
-    localeDetection: true,
   },
 
   // Headers for security and performance
@@ -42,10 +38,6 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
         ],
       },
     ];
@@ -60,24 +52,7 @@ const nextConfig = {
         tls: false,
       };
     }
-    
-    // Bundle analyzer in development
-    if (process.env.ANALYZE === 'true') {
-      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-      config.plugins.push(
-        new BundleAnalyzerPlugin({
-          analyzerMode: 'server',
-          openAnalyzer: true,
-        })
-      );
-    }
-
     return config;
-  },
-
-  // Environment variables
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 };
 
