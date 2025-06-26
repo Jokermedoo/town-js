@@ -1,0 +1,484 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
+
+interface SocialIconProps {
+  platform: string;
+  size?: number;
+  onClick: () => void;
+  isActive: boolean;
+}
+
+// Real Social Platform Icons with exact colors from image
+const SocialIcon: React.FC<SocialIconProps> = ({ platform, size = 90, onClick, isActive }) => {
+  const platforms = {
+    soundcloud: {
+      color: 'linear-gradient(45deg, #ff5500 0%, #ff8800 100%)',
+      name: 'SoundCloud',
+      nameAr: 'ساوند كلاود',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M1.175 12.225c-.051 0-.094.046-.101.105l-.233 2.154.233 2.105c.007.059.05.105.101.105.053 0 .094-.046.101-.105l.277-2.105-.277-2.154c-.007-.059-.048-.105-.101-.105zm1.062.748c-.058 0-.103.049-.109.111l-.195 1.406.195 1.355c.006.062.051.111.109.111.061 0 .105-.049.111-.111l.232-1.355-.232-1.406c-.006-.062-.05-.111-.111-.111zm1.055.674c-.067 0-.122.053-.122.124l-.179 1.001.179.955c0 .071.055.124.122.124.07 0 .125-.053.125-.124l.211-.955-.211-1.001c0-.071-.055-.124-.125-.124zm1.063.648c-.077 0-.14.055-.14.134l-.157.724.157.69c0 .079.063.134.14.134.078 0 .139-.055.139-.134l.184-.69-.184-.724c0-.079-.061-.134-.139-.134zm1.061.123c-.086 0-.157.061-.157.144l-.133.601.133.574c0 .083.071.144.157.144.089 0 .16-.061.16-.144l.157-.574-.157-.601c0-.083-.071-.144-.16-.144zm1.066-.123c-.098 0-.18.068-.18.154l-.114.87.114.83c0 .086.082.154.18.154.101 0 .183-.068.183-.154l.134-.83-.134-.87c0-.086-.082-.154-.183-.154zm1.062.109c-.11 0-.197.074-.197.168l-.093.993.093.945c0 .094.087.168.197.168.114 0 .2-.074.2-.168l.11-.945-.11-.993c0-.094-.086-.168-.2-.168zm1.067-.123c-.123 0-.222.08-.222.181l-.071 1.135.071 1.084c0 .101.099.181.222.181.126 0 .225-.08.225-.181l.084-1.084-.084-1.135c0-.101-.099-.181-.225-.181zm1.062.182c-.136 0-.246.087-.246.196l-.05 1.016.05.969c0 .109.11.196.246.196.139 0 .25-.087.25-.196l.058-.969-.058-1.016c0-.109-.111-.196-.25-.196zm1.067-.109c-.148 0-.269.094-.269.212l-.028 1.125.028 1.07c0 .118.121.212.269.212.152 0 .273-.094.273-.212l.033-1.07-.033-1.125c0-.118-.121-.212-.273-.212zm1.063.046c-.162 0-.294.101-.294.225l-.007 1.079.007 1.021c0 .124.132.225.294.225.165 0 .297-.101.297-.225l.009-1.021-.009-1.079c0-.124-.132-.225-.297-.225zm1.067.015c-.175 0-.317.107-.317.24v2.061c0 .133.142.24.317.24.178 0 .32-.107.32-.24V13.23c0-.133-.142-.24-.32-.24zm1.062.108c-.188 0-.341.114-.341.256v1.848c0 .142.153.256.341.256.191 0 .344-.114.344-.256v-1.848c0-.142-.153-.256-.344-.256zm1.067-.123c-.201 0-.364.121-.364.271v2.32c0 .15.163.271.364.271.204 0 .367-.121.367-.271v-2.32c0-.15-.163-.271-.367-.271zm1.062.015c-.214 0-.388.127-.388.285v2.289c0 .158.174.285.388.285.217 0 .391-.127.391-.285v-2.289c0-.158-.174-.285-.391-.285zm1.067-.046c-.227 0-.411.134-.411.301v2.378c0 .167.184.301.411.301.23 0 .414-.134.414-.301v-2.378c0-.167-.184-.301-.414-.301zm1.062.061c-.24 0-.435.141-.435.316v2.255c0 .175.195.316.435.316.243 0 .438-.141.438-.316v-2.255c0-.175-.195-.316-.438-.316zm1.067-.076c-.253 0-.458.148-.458.332v2.407c0 .184.205.332.458.332.256 0 .461-.148.461-.332v-2.407c0-.184-.205-.332-.461-.332zm1.062.045c-.266 0-.482.155-.482.348v2.317c0 .193.216.348.482.348.269 0 .485-.155.485-.348v-2.317c0-.193-.216-.348-.485-.348zm1.067-.061c-.279 0-.505.162-.505.365v2.439c0 .203.226.365.505.365.282 0 .508-.162.508-.365v-2.439c0-.203-.226-.365-.508-.365z"/>
+        </svg>
+      )
+    },
+    tiktok: {
+      color: 'linear-gradient(45deg, #ff0050 0%, #00f2ea 100%)',
+      name: 'TikTok',
+      nameAr: 'تيك توك',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+        </svg>
+      )
+    },
+    snapchat: {
+      color: '#FFFC00',
+      name: 'Snapchat',
+      nameAr: 'سناب شات',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="#333" d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.719-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.346-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.748-1.378 0 0-.599 2.282-.744 2.840-.282 1.084-1.064 2.456-1.549 3.235C9.584 23.815 10.77 24.001 12.017 24.001c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
+        </svg>
+      )
+    },
+    spotify: {
+      color: '#1DB954',
+      name: 'Spotify',
+      nameAr: 'سبوتيفاي',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+        </svg>
+      )
+    },
+    twitter: {
+      color: '#1DA1F2',
+      name: 'Twitter',
+      nameAr: 'تويتر',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+        </svg>
+      )
+    },
+    instagram: {
+      color: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+      name: 'Instagram',
+      nameAr: 'إنستجرام',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+        </svg>
+      )
+    },
+    telegram: {
+      color: '#0088cc',
+      name: 'Telegram',
+      nameAr: 'تيليجرام',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+      )
+    },
+    youtube: {
+      color: '#FF0000',
+      name: 'YouTube',
+      nameAr: 'يوتيوب',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      )
+    },
+    facebook: {
+      color: '#1877F2',
+      name: 'Facebook',
+      nameAr: 'فيسبوك',
+      icon: (
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <path fill="white" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      )
+    }
+  };
+
+  const platformData = platforms[platform as keyof typeof platforms];
+  if (!platformData) return null;
+
+  return (
+    <motion.div
+      whileHover={{ 
+        scale: 1.15, 
+        y: -8,
+        rotateY: 10,
+      }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      className={`relative cursor-pointer transition-all duration-300 ${isActive ? 'z-20' : 'z-10'}`}
+      style={{ width: size, height: size }}
+    >
+      {/* Main Icon */}
+      <div 
+        className="w-full h-full rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 hover:border-white/50 transition-all duration-300 relative overflow-hidden"
+        style={{ 
+          background: platformData.color,
+          boxShadow: isActive 
+            ? '0 25px 50px rgba(0,0,0,0.4), 0 0 40px rgba(59,130,246,0.6)' 
+            : '0 15px 35px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.2)'
+        }}
+      >
+        <div className="w-12 h-12">
+          {platformData.icon}
+        </div>
+        
+        {/* Shimmer effect on hover */}
+        <motion.div
+          className="absolute inset-0 opacity-0 hover:opacity-20"
+          style={{
+            background: 'linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%)',
+            transform: 'translateX(-100%)',
+          }}
+          whileHover={{
+            transform: 'translateX(100%)',
+            transition: { duration: 0.6 }
+          }}
+        />
+      </div>
+      
+      {/* Glow effect */}
+      <motion.div
+        className="absolute inset-0 rounded-full opacity-0 hover:opacity-40 transition-opacity duration-300 -z-10"
+        style={{ 
+          background: platformData.color, 
+          filter: 'blur(25px)',
+          transform: 'scale(1.1)'
+        }}
+      />
+      
+      {/* Floating label */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileHover={{ opacity: 1, y: 0 }}
+        className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-800/90 backdrop-blur-sm text-white text-sm font-medium px-3 py-1 rounded-lg border border-gray-700"
+      >
+        {platformData.nameAr}
+      </motion.div>
+    </motion.div>
+  );
+};
+
+interface PlatformModalProps {
+  platform: string | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const PlatformModal: React.FC<PlatformModalProps> = ({ platform, isOpen, onClose }) => {
+  const { t } = useTranslation();
+  
+  const platformsData = {
+    soundcloud: {
+      nameAr: 'ساوند كلاود',
+      nameEn: 'SoundCloud',
+      descAr: 'تعزيز الموسيقى الخاصة بك مع مستمعين حقيقيين ومتابعين نشطين',
+      descEn: 'Promote your music with real listeners and active followers',
+      features: ['تشغيلات الموسيقى', 'متابعين حقيقيين', 'إعجابات', 'تعليقات مفيدة', 'إعادة نشر'],
+      color: 'from-orange-500 to-orange-600',
+      gradient: 'linear-gradient(45deg, #ff5500, #ff8800)'
+    },
+    tiktok: {
+      nameAr: 'تيك توك',
+      nameEn: 'TikTok',
+      descAr: 'تعزيز المحتوى الخاص بك وزيادة المشاهدات والمتابعين بطريقة طبيعية',
+      descEn: 'Boost your content and increase views and followers naturally',
+      features: ['مشاهدات الفيديو', 'متابعين حقيقيين', 'إعجابات', 'مشاركات', 'تعليقات'],
+      color: 'from-pink-500 to-cyan-500',
+      gradient: 'linear-gradient(45deg, #ff0050, #00f2ea)'
+    },
+    snapchat: {
+      nameAr: 'سناب شات',
+      nameEn: 'Snapchat',
+      descAr: 'زيادة الأصدقاء ومشاهدات القصص مع تفاعل حقيقي',
+      descEn: 'Increase friends and story views with real engagement',
+      features: ['إضافة أصدقاء', 'مشاهدات القصص', 'نقاط سناب', 'تفاعل حقيقي', 'زيادة الشهرة'],
+      color: 'from-yellow-400 to-yellow-500',
+      gradient: '#FFFC00'
+    },
+    spotify: {
+      nameAr: 'سبوتيفاي',
+      nameEn: 'Spotify',
+      descAr: 'زيادة مستمعين الموسيقى والبودكاست مع متابعين نشطين',
+      descEn: 'Increase music and podcast listeners with active followers',
+      features: ['مستمعين شهريين', 'تشغيلات', 'متابعين', 'حفظ الأغاني', 'قوائم تشغيل'],
+      color: 'from-green-500 to-green-600',
+      gradient: '#1DB954'
+    },
+    twitter: {
+      nameAr: 'تويتر',
+      nameEn: 'Twitter',
+      descAr: 'زيادة المتابعين والتفاعل مع التغريدات والمحتوى',
+      descEn: 'Increase followers and engagement with tweets and content',
+      features: ['متابعين حقيقيين', 'إعجابات', 'إعادة تغريد', 'مشاهدات', 'تعليقات'],
+      color: 'from-blue-400 to-blue-500',
+      gradient: '#1DA1F2'
+    },
+    instagram: {
+      nameAr: 'إنستجرام',
+      nameEn: 'Instagram',
+      descAr: 'زيادة المتابعين والإعجابات والمشاهدات بطريقة طبيعية وآمنة',
+      descEn: 'Increase followers, likes, and views naturally and safely',
+      features: ['متابعين حقيقيين', 'إعجابات', 'مشاهدات القصص', 'تعليقات مفيدة', 'حفظ المنشورات'],
+      color: 'from-pink-500 to-purple-500',
+      gradient: 'linear-gradient(45deg, #f09433, #dc2743, #bc1888)'
+    },
+    telegram: {
+      nameAr: 'تيليجرام',
+      nameEn: 'Telegram',
+      descAr: 'زيادة أعضاء القناة والمجموعة مع تفاعل حقيقي ونشط',
+      descEn: 'Increase channel and group members with real and active engagement',
+      features: ['أعضاء القناة', 'مشاهدات المنشورات', 'تفاعل نشط', 'مشتركين حقيقيين', 'رسائل'],
+      color: 'from-blue-500 to-blue-600',
+      gradient: '#0088cc'
+    },
+    youtube: {
+      nameAr: 'يوتيوب',
+      nameEn: 'YouTube',
+      descAr: 'نمي قناتك مع مشتركين حقيقيين ووقت مشاهدة أطول',
+      descEn: 'Grow your channel with real subscribers and longer watch time',
+      features: ['مشتركين حقيقيين', 'مشاهدات', 'إعجابات', 'وقت المشاهدة', 'تعليقات'],
+      color: 'from-red-500 to-red-600',
+      gradient: '#FF0000'
+    },
+    facebook: {
+      nameAr: 'فيسبوك',
+      nameEn: 'Facebook',
+      descAr: 'تنمية صفحتك مع متابعين حقيقيين وتفاعل أكبر',
+      descEn: 'Grow your page with real followers and greater engagement',
+      features: ['متابعين الصفحة', 'إعجابات', 'مشاركات', 'تعليقات', 'مشاهدات الفيديو'],
+      color: 'from-blue-600 to-blue-700',
+      gradient: '#1877F2'
+    }
+  };
+
+  const info = platform ? platformsData[platform as keyof typeof platformsData] : null;
+  if (!info) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.7, opacity: 0, y: 50 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.7, opacity: 0, y: 50 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            onClick={(e) => e.stopPropagation()}
+            className="relative max-w-md w-full mx-4"
+          >
+            {/* Glowing border */}
+            <div 
+              className="absolute inset-0 rounded-3xl opacity-60 blur-xl"
+              style={{ background: info.gradient }}
+            />
+            
+            {/* Modal content */}
+            <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-3xl p-8 border border-gray-700/50">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div 
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl"
+                  style={{ background: info.gradient }}
+                >
+                  <div className="w-12 h-12">
+                    {/* Platform icon would go here */}
+                  </div>
+                </div>
+                
+                <h3 className="text-3xl font-bold text-white mb-3">
+                  {info.nameAr}
+                </h3>
+                <p className="text-gray-300 leading-relaxed text-lg">
+                  {info.descAr}
+                </p>
+              </div>
+              
+              {/* Features */}
+              <div className="space-y-4 mb-8">
+                <h4 className="text-lg font-semibold text-white mb-4">الخدمات المتاحة:</h4>
+                {info.features.map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center space-x-3 rtl:space-x-reverse"
+                  >
+                    <div 
+                      className="w-3 h-3 rounded-full shadow-lg"
+                      style={{ background: info.gradient }}
+                    />
+                    <span className="text-gray-200 font-medium">{feature}</span>
+                  </motion.div>
+                ))}
+              </div>
+              
+              {/* Action buttons */}
+              <div className="flex space-x-4 rtl:space-x-reverse">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ background: info.gradient }}
+                  className="flex-1 text-white font-bold py-4 px-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                >
+                  اطلب الخدمة الآن
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onClose}
+                  className="px-6 py-4 border-2 border-gray-600 text-gray-300 rounded-xl hover:border-gray-400 transition-colors duration-300"
+                >
+                  إغلاق
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const SocialPlatformIcons: React.FC = () => {
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
+  const { t } = useTranslation();
+
+  // Order matching the image: SoundCloud, TikTok, Snapchat, Spotify, Twitter, Instagram, Telegram, YouTube, Facebook
+  const platforms = [
+    'soundcloud', 'tiktok', 'snapchat', 'spotify', 'twitter', 
+    'instagram', 'telegram', 'youtube', 'facebook'
+  ];
+
+  return (
+    <section className="py-24 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900" />
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                           radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%)`
+        }} />
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-5xl md:text-6xl font-bold mb-8">
+            <span className="text-gradient-primary">منصات التواصل الاجتماعي</span>
+          </h2>
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            اختر المنصة التي تريد تنميتها واكتشف خدماتنا المتخصصة والمتطورة
+          </p>
+        </motion.div>
+
+        {/* Icons Grid - 3 rows layout like in image */}
+        <div className="max-w-4xl mx-auto">
+          {/* First row - 3 icons */}
+          <motion.div 
+            className="flex justify-center items-center gap-12 mb-12"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            {platforms.slice(0, 3).map((platform, index) => (
+              <SocialIcon 
+                key={platform}
+                platform={platform}
+                size={100}
+                onClick={() => setSelectedPlatform(platform)}
+                isActive={selectedPlatform === platform}
+              />
+            ))}
+          </motion.div>
+
+          {/* Second row - 3 icons */}
+          <motion.div 
+            className="flex justify-center items-center gap-12 mb-12"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            {platforms.slice(3, 6).map((platform, index) => (
+              <SocialIcon 
+                key={platform}
+                platform={platform}
+                size={100}
+                onClick={() => setSelectedPlatform(platform)}
+                isActive={selectedPlatform === platform}
+              />
+            ))}
+          </motion.div>
+
+          {/* Third row - 3 icons */}
+          <motion.div 
+            className="flex justify-center items-center gap-12"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            {platforms.slice(6, 9).map((platform, index) => (
+              <SocialIcon 
+                key={platform}
+                platform={platform}
+                size={100}
+                onClick={() => setSelectedPlatform(platform)}
+                isActive={selectedPlatform === platform}
+              />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center mt-20"
+        >
+          <p className="text-gray-400 mb-8 text-lg">
+            انقر على أي أيقونة لمعرفة المزيد عن الخدمات المتاحة والباقات المتخصصة
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-5 px-10 rounded-full text-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300"
+          >
+            ابدأ رحلتك الآن
+          </motion.button>
+        </motion.div>
+      </div>
+
+      {/* Platform Modal */}
+      <PlatformModal 
+        platform={selectedPlatform}
+        isOpen={!!selectedPlatform}
+        onClose={() => setSelectedPlatform(null)}
+      />
+    </section>
+  );
+};
+
+export default SocialPlatformIcons;
